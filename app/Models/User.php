@@ -7,11 +7,22 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable ,HasApiTokens;
+
+    const VERIFIED_USER = '1';
+    const UNVERIFIED_USER = '0';
+    const ADMIN_USER = 'true';
+    const REGULAR_USER = 'false';
+
+    // public $transformer = UserTransformer::class;
+    protected $table = 'users';
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +33,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'verified',
+        'verification_token',
+        'admin',
     ];
 
     /**
@@ -32,6 +46,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token',
     ];
 
     /**
@@ -39,11 +54,24 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'email_verified_at' => 'datetime',
+    //         'password' => 'hashed',
+    //     ];
+    // }
+
+
+    public function isVerified(){
+        return $this->verified == User::VERIFIED_USER;
     }
+
+    public function isAdmin(){
+        return $this->admin == User::ADMIN_USER;
+    }
+
+    public static function generateVerificationCode(){
+        return Str::random(40);
+    } 
 }
