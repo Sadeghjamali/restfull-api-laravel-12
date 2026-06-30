@@ -52,7 +52,7 @@ class User extends Authenticatable
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return bool|string[]
      */
     // protected function casts(): array
     // {
@@ -73,5 +73,5 @@ class User extends Authenticatable
 
     public static function generateVerificationCode(){
         return Str::random(40);
-    } 
+    }
 }

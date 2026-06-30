@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +18,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(50)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Category::factory(30)->create();
+
+        Product::factory(300)->create()->each(function($product) {
+            $randomCategories = Category::all()->random(rand(1,5))->pluck('id');
+            $product->categories()->attach($randomCategories);
+        });
+
+        Transaction::factory(300)->create();
     }
 }
