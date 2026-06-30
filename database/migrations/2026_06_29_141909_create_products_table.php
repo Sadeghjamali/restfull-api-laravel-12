@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedInteger('seller_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('seller_id')->references('id')->on('users');
         });
     }
 
