@@ -13,7 +13,8 @@ class BuyerController extends Controller
      */
     public function index()
     {
-        //
+        $buyers = Buyer::has('transactions')->get();
+        return response()->json(['data'=>$buyers],200);
     }
 
     /**
@@ -37,7 +38,9 @@ class BuyerController extends Controller
      */
     public function show(Buyer $buyer)
     {
-        //
+        if($buyer->has('transactions')){
+            return response()->json(['data'=>$buyer],200);
+        }  
     }
 
     /**
