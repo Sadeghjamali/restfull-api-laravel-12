@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Models\Buyer;
 use Illuminate\Http\Request;
 
-class BuyerController extends Controller
+class BuyerController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -14,23 +14,7 @@ class BuyerController extends Controller
     public function index()
     {
         $buyers = Buyer::has('transactions')->get();
-        return response()->json(['data'=>$buyers],200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return $this->showAll($buyers);
     }
 
     /**
@@ -39,31 +23,7 @@ class BuyerController extends Controller
     public function show(Buyer $buyer)
     {
         if($buyer->has('transactions')){
-            return response()->json(['data'=>$buyer],200);
+            return $this->showOne($buyer);
         }  
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Buyer $buyer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Buyer $buyer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Buyer $buyer)
-    {
-        //
     }
 }

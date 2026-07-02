@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json(['users'=>$users],200);
+        return $this->showAll($users);
     }
 
     /**
@@ -42,7 +42,7 @@ class UserController extends Controller
         $data['admin']=User::REGULAR_USER;
         $user = User::create($data);
 
-        return response()->json(['data'=>$user],201);
+        return $this->showOne($user,201);
     }
 
     /**
@@ -50,7 +50,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json(['data'=>$user],200);
+        return $this->showOne($user);
     }
 
     /**
@@ -88,23 +88,17 @@ class UserController extends Controller
 
         if ($request->has('admin')) {
             if (!$user->isVerified()) {
-                return response()->json([
-                    'error'=>'only Verified user can modify the admin field',
-                    'code'=>409
-                ],409);
+                return $this->errorResponse('only Verified user can modify the admin field',409);
             }
             $user->admin = $request->admin;
         }
 
         if (!$user->isDirty()) {
-            return response()->json([
-                    'error'=>'You need to specify a different value to update',
-                    'code'=>422
-            ],422);
+            return $this->errorResponse('You need to specify a different value to update',422);
         }
 
         $user->save();
-        return response()->json(['data'=> $user],200);
+        return $this->showOne($user);
     }
 
     /**
@@ -113,6 +107,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(['data'=>$user],200);
+        return $this->showOne($user);
     }
 }

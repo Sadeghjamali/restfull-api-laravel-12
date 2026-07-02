@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class TransactionController extends Controller
+class TransactionController extends ApiController
 {
     /**
      * Display a listing of the resource.
